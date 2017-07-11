@@ -16,8 +16,26 @@ user = User.create(
 
 stations = YAML.load_file('config/stations.yml')
 
+
+
 Station.transaction do
   stations.each do |station|
     Station.create! name: station
   end
+end
+
+
+Magic.transaction do
+  [
+    "cнятие сглаза",
+    "cнятие порчи",
+    "гадание по кофейной гуще",
+    "гадание таро",
+    "любовная магия",
+    "очищение кармы",
+    "cнятие проклятия",
+    "cнятие венца безбрачия"
+  ].each do |magic|
+    Magic.create! name: magic
+ end
 end

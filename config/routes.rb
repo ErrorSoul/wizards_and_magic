@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :users
     resources :categories
     resources :stations
+    resources :magics
   end
 
  end

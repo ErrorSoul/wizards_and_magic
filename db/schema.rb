@@ -10,12 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711155046) do
+ActiveRecord::Schema.define(version: 20170711161207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "magic_lists", force: :cascade do |t|
+    t.bigint "magic_id"
+    t.bigint "user_id"
+    t.integer "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["magic_id"], name: "index_magic_lists_on_magic_id"
+    t.index ["user_id"], name: "index_magic_lists_on_user_id"
+  end
+
+  create_table "magics", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -48,4 +64,6 @@ ActiveRecord::Schema.define(version: 20170711155046) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "magic_lists", "magics"
+  add_foreign_key "magic_lists", "users"
 end
