@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Input } from 'antd';
+import $ from "jquery";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import { Table } from 'antd';
+import axios from 'axios';
 
 const columns = [{
   title: 'Name',
@@ -199,6 +201,7 @@ class MyUpload extends React.Component {
     this.setState({ fileList });
   }
   render() {
+
     const props = {
       action: '/mains/photo',
       onChange: this.handleChange,
@@ -255,33 +258,89 @@ class Avatar extends React.Component {
   }
 
   render() {
+    var authenticityToken = $('meta[name="csrf-token"]').attr('content');
     const imageUrl = this.state.imageUrl;
     const props = {
-      className: "avatar-uploadera",
+      className: "avatar-uploader",
       name: "avatar",
       showUploadList: false,
       beforeUpload: this.beforeUpload,
       onChange: this.handleChange,
       action: '/mains/photo',
       multiple: true,
-      headers: { 'X-CSRF-Token': '+Li4GcRqGbjym3Qzhn+qZqSZt06ozeaxectenwHKkHdqX8K6SrgzDP2CHddF/f2jt3VGtHN2dnYAc7Bfddogog==' }
+      headers: { 'X-CSRF-Token': authenticityToken }
     };
     return (
       <Upload {...props}>
         {
           imageUrl ?
             <Row>
-             <Col span={12}><img src={imageUrl} alt="" className="avatarh" /></Col>
+             <Col span={12}><img src={imageUrl} alt="" className="avatar" /></Col>
 
             </Row>:
-            <Icon type="plus" className="avatar-uploader-triggera" />
+            <Icon type="plus" className="avatar-uploader-trigger" />
         }
       </Upload>
     );
   }
 }
 
+import { AutoComplete } from 'antd';
+const Option = AutoComplete.Option;
+
+class Complete extends React.Component {
+  state = {
+    result: [],
+    obj: {name: 'x'}
+  }
+
+  onSelect = (value) => {
+    const { result } = this.state;
+    let finding = result.find((obj) => { return obj.id == Number(value) });
+    if (finding) { this.setState({obj: finding})};
+
+  }
+
+  handleSearch = (value) => {
+    let result;
+
+    if (value && value.length >= 3) {
+      axios.get('/mains/photo', { params: { search: value} })
+        .then((response) => {
+           result = response.data.result;
+           this.setState({ result: result });
+        });
+
+    } else {
+      result = [];
+      this.setState({ result });
+    }
+  }
+
+  render() {
+    const { result } = this.state;
+    const children = result.map((obj) => {
+      return <Option key={obj.id} value={String(obj.id)}>{obj.name}</Option>;
+    });
+
+    return (
+      <div>
+        <AutoComplete
+          onSearch={this.handleSearch}
+          onSelect={this.onSelect}
+          placeholder="input here"
+          dataSource={children}
+          defaultValue= { this.state.obj.name }
+        >
+          <Input size='large' suffix={<Icon type="search" className="certain-category-icon" />} />
+        </AutoComplete>
+        <Input type='hidden' name="dfdsf" value={this.state.obj.id} />
+     </div>
+    );
+  }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
-ReactDOM.render(<Avatar/>, document.getElementById('root'));
+  ReactDOM.render(<Complete/>, document.getElementById('root'));
 });
