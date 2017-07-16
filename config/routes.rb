@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :magics
     resources :wizards do
       get :profile, on: :collection
+      get :fetch_station, on: :collection
     end
   end
 

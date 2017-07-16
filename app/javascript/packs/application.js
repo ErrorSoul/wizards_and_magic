@@ -12,3 +12,5 @@ console.log('Hello World from Webpacker')
 //= require_self
 //= require jquery
 import 'packs/hello_first'
+import 'packs/wizard_form'
+import 'packs/wizard_main_form'

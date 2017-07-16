@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711161207) do
+ActiveRecord::Schema.define(version: 20170712182514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,15 @@ ActiveRecord::Schema.define(version: 20170711161207) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "station_lists", force: :cascade do |t|
+    t.bigint "station_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["station_id"], name: "index_station_lists_on_station_id"
+    t.index ["user_id"], name: "index_station_lists_on_user_id"
   end
 
   create_table "stations", force: :cascade do |t|
@@ -67,4 +76,5 @@ ActiveRecord::Schema.define(version: 20170711161207) do
 
   add_foreign_key "magic_lists", "magics"
   add_foreign_key "magic_lists", "users"
+  add_foreign_key "station_lists", "users"
 end
