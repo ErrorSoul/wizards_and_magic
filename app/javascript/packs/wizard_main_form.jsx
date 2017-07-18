@@ -20,6 +20,7 @@ class RegistrationForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        this.props.onSubmit(values);
       }
     });
   }
@@ -29,7 +30,7 @@ class RegistrationForm extends React.Component {
   }
 
   onClick =(e) => {
-      this.props.form.setFieldsValue({station_id: this.state.station.name})
+      this.props.form.setFieldsValue({station_id: this.state.station.name});
   }
   checkPassword = (rule, value, callback) => {
     const form = this.props.form;
@@ -49,7 +50,7 @@ class RegistrationForm extends React.Component {
 
   onSelect = (value) => {
     console.log('value on select', value);
-    this.props.form.setFieldsValue({'station_id': value});
+    this.props.form.setFieldsValue({station_id: value});
   }
 
   handleStationChange = (value) => {
@@ -143,7 +144,7 @@ class RegistrationForm extends React.Component {
           hasFeedback
         >
           {getFieldDecorator('about_me', {
-            initialValue: user.about_me,
+            initialValue: user.about_me || '',
             rules: [{
               required: true, message: 'Need info!',
             }],

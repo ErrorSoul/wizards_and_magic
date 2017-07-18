@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :wizards do
       get :profile, on: :collection
       get :fetch_station, on: :collection
+      get :search, on: :collection
     end
   end
 
